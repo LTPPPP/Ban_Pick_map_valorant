@@ -23,12 +23,10 @@ def draw_bracket(teams):
 
     for i in range(num_teams):
         y = i * bracket_height + y_offset
-        # NAME _ POS
-        positions.append((60, y))
+        positions.append((150, y))
         canvas.create_text(20, y, text=teams[i], anchor=tk.W, fill=team_color, font=("Helvetica", 12, "bold"))
 
     round_positions = positions
-
     line_color = "black"
 
     for r in range(1, rounds + 1):
@@ -57,12 +55,11 @@ def draw_bracket(teams):
 
 def get_teams_from_file(file_path):
     try:
-        with open(file_path, 'r') as file:
+        with open(file_path, 'r', encoding='utf-8') as file:
             teams = [line.strip() for line in file if line.strip()]
 
         num_teams = len(teams)
 
-        # If the number of teams is odd, add a placeholder team
         if num_teams % 2 != 0:
             print(f"Số đội lẻ, thêm đội 'Bye' vào để đủ {num_teams + 1} đội.")
             teams.append("Bye")

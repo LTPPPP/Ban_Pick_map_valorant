@@ -3,19 +3,19 @@ from tkinter import messagebox
 import tkinter.font as tkfont
 from PIL import Image, ImageTk
 
-
 class ValorantMapPicker:
+    TEAM_A = ""
+    TEAM_B = ""
+
     def __init__(self, master):
-        TEAM_A = "PRX"
-        TEAM_B = "EG"
         self.master = master
         self.master.title("Valorant Map Picker")
         self.master.attributes('-fullscreen', True)
 
         self.maps = ["Ascent", "Bind", "Haven", "Icebox", "Lotus", "Sunset"]
-        self.banned_maps = {f"{TEAM_A}": [], f"{TEAM_B}": []}
-        self.picked_maps = {f"{TEAM_A}": [], f"{TEAM_B}": []}
-        self.current_team = f"{TEAM_A}"
+        self.banned_maps = {self.TEAM_A: [], self.TEAM_B: []}
+        self.picked_maps = {self.TEAM_A: [], self.TEAM_B: []}
+        self.current_team = self.TEAM_A
 
         self.map_images = {
             "Ascent": "map/Ascent.png",
@@ -130,7 +130,7 @@ class ValorantMapPicker:
                 btn.config(compound=tk.TOP)
 
     def switch_team(self):
-        self.current_team = f"{TEAM_B}" if self.current_team == f"{TEAM_A}" else f"{TEAM_A}"
+        self.current_team = self.TEAM_B if self.current_team == self.TEAM_A else self.TEAM_A
 
     def check_end_condition(self):
         total_actions = sum(len(maps) for maps in self.banned_maps.values()) + sum(
@@ -147,27 +147,25 @@ class ValorantMapPicker:
             for map_name in maps:
                 result += f"{map_name} (by {team})\n"
 
-        # Save result to a file
+        # Save result to a file with UTF-8 encoding
         filename = self.generate_filename()
-        with open(filename, 'w') as file:
+        with open(filename, 'w', encoding='utf-8') as file:
             file.write(result)
 
         messagebox.showinfo("Final Result", f"Results saved to {filename}")
 
     def generate_filename(self):
         # Create a filename based on bans and picks
-        bans_A = "_".join(self.banned_maps[f"{TEAM_A}"])
-        picks_A = "_".join(self.picked_maps[f"{TEAM_A}"])
-        bans_B = "_".join(self.banned_maps[f"{TEAM_B}"])
-        picks_B = "_".join(self.picked_maps[f"{TEAM_B}"])
-        return f"map_picked/{TEAM_A}_VS_{TEAM_B}_BAN_PICK_map.txt"
+        bans_A = "_".join(self.banned_maps[self.TEAM_A])
+        picks_A = "_".join(self.picked_maps[self.TEAM_A])
+        bans_B = "_".join(self.banned_maps[self.TEAM_B])
+        picks_B = "_".join(self.picked_maps[self.TEAM_B])
+        return f"map_picked/{self.TEAM_A}_VS_{self.TEAM_B}_BAN_PICK_map.txt"
 
     def other_team(self):
-        return f"{TEAM_B}" if self.current_team == f"{TEAM_A}" else f"{TEAM_A}"
+        return self.TEAM_B if self.current_team == self.TEAM_A else self.TEAM_A
 
 
 root = tk.Tk()
-TEAM_A ="PRX"
-TEAM_B ="EG"
 app = ValorantMapPicker(root)
 root.mainloop()
