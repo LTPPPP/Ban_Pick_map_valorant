@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import font
 
 def draw_bracket(teams):
     window = tk.Tk()
@@ -19,12 +20,21 @@ def draw_bracket(teams):
     positions = []
 
     team_color = "blue"
+    decider_color = "green"
     champion_color = "red"
+
+    # Create a font object to measure text width
+    text_font = font.Font(family="Helvetica", size=12, weight="bold")
 
     for i in range(num_teams):
         y = i * bracket_height + y_offset
         positions.append((150, y))
-        canvas.create_text(20, y, text=teams[i], anchor=tk.W, fill=team_color, font=("Helvetica", 12, "bold"))
+        text = teams[i]
+        text_width = text_font.measure(text)
+        if "(decider)" in teams[i]:
+            canvas.create_text(20, y, text=text, anchor=tk.W, fill=decider_color, font=text_font)
+        else:
+            canvas.create_text(20, y, text=text, anchor=tk.W, fill=team_color, font=text_font)
 
     round_positions = positions
     line_color = "black"
@@ -49,7 +59,7 @@ def draw_bracket(teams):
 
     if round_positions:
         x_final, y_final = round_positions[0]
-        canvas.create_text(x_final + 20, y_final, text="Vô địch", anchor=tk.W, fill=champion_color, font=("Helvetica", 14, "bold"))
+        canvas.create_text(x_final + 20, y_final, text="Vô địch", anchor=tk.W, fill=champion_color, font=text_font)
 
     window.mainloop()
 
@@ -71,7 +81,7 @@ def get_teams_from_file(file_path):
         return []
 
 # Example usage
-file_path = "team/team.txt"  # Replace with your file path
+file_path = "tour.txt"  # Replace with your file path
 teams = get_teams_from_file(file_path)
 if teams:
     draw_bracket(teams)
