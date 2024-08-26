@@ -5,7 +5,10 @@ def draw_bracket(teams):
     window = tk.Tk()
     window.title("Sơ đồ thi đấu")
 
-    canvas = tk.Canvas(window, width=800, height=600, bg='white')
+    # Adjust canvas width to accommodate longer team names
+    canvas_width = 1000
+    canvas_height = 600
+    canvas = tk.Canvas(window, width=canvas_width, height=canvas_height, bg='white')
     canvas.pack()
 
     num_teams = len(teams)
@@ -13,8 +16,8 @@ def draw_bracket(teams):
     while 2 ** rounds < num_teams:
         rounds += 1
 
-    bracket_height = 600 // num_teams
-    x_spacing = 150
+    bracket_height = canvas_height // num_teams
+    x_spacing = 200  # Increase spacing between rounds
     y_offset = bracket_height // 2
 
     positions = []
@@ -28,13 +31,14 @@ def draw_bracket(teams):
 
     for i in range(num_teams):
         y = i * bracket_height + y_offset
-        positions.append((150, y))
+        positions.append((200, y))
         text = teams[i]
         text_width = text_font.measure(text)
+        # Adjust text position to avoid overlap with the line
         if "(decider)" in teams[i]:
-            canvas.create_text(20, y, text=text, anchor=tk.W, fill=decider_color, font=text_font)
+            canvas.create_text(190 - text_width, y, text=text, anchor=tk.W, fill=decider_color, font=text_font)
         else:
-            canvas.create_text(20, y, text=text, anchor=tk.W, fill=team_color, font=text_font)
+            canvas.create_text(190 - text_width, y, text=text, anchor=tk.W, fill=team_color, font=text_font)
 
     round_positions = positions
     line_color = "black"
@@ -48,6 +52,7 @@ def draw_bracket(teams):
                 x_mid = x1 + x_spacing
                 y_mid = (y1 + y2) // 2
 
+                # Draw lines
                 canvas.create_line(x1, y1, x_mid, y1, fill=line_color, width=2)
                 canvas.create_line(x1, y2, x_mid, y2, fill=line_color, width=2)
                 canvas.create_line(x_mid, y1, x_mid, y2, fill=line_color, width=2)
@@ -59,7 +64,8 @@ def draw_bracket(teams):
 
     if round_positions:
         x_final, y_final = round_positions[0]
-        canvas.create_text(x_final + 20, y_final, text="Vô địch", anchor=tk.W, fill=champion_color, font=text_font)
+        # Position the championship text to avoid overlap
+        canvas.create_text(x_final + 40, y_final, text="Vô địch", anchor=tk.W, fill=champion_color, font=text_font)
 
     window.mainloop()
 
